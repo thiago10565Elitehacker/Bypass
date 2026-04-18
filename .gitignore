@@ -89,7 +89,7 @@ class AdvancedBrowserBypass:
                 'https': f'https://{random.choice(["proxy1.com", "proxy2.com", "proxy3.com"])}:8080'
             }
             
-            # Cria sessão com headers aleatórios
+            
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -100,11 +100,11 @@ class AdvancedBrowserBypass:
                 'Cache-Control': 'max-age=0'
             }
             
-            # Adiciona fingerprint ao header
+            
             fingerprint = self.generate_fingerprint()
             headers['X-Fingerprint'] = json.dumps(fingerprint)
             
-            # Adiciona delay aleatório entre requisições
+            
             time.sleep(random.uniform(1, 3))
             
             # Faz requisição com proxy e headers
