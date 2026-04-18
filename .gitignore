@@ -1,207 +1,136 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[codz]
-*$py.class
+import requests
+import time
+import random
+import json
+import hashlib
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-# C extensions
-*.so
+class AdvancedBrowserBypass:
+    def __init__(self):
+        self.session = requests.Session()
+        self.driver = None
+        
+    def generate_fingerprint(self):
+        # Gera fingerprint realista baseado em dados coletados
+        return {
+            'navigator.userAgent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'navigator.platform': 'Win32',
+            'navigator.hardwareConcurrency': 8,
+            'navigator.maxTouchPoints': 0,
+            'navigator.productSub': '20030107',
+            'navigator.vendor': '',
+            'navigator.vendorSub': '',
+            'screen.width': 1920,
+            'screen.height': 1080,
+            'screen.colorDepth': 24,
+            'screen.pixelDepth': 24,
+            'timezone': 'America/Sao_Paulo',
+            'language': 'pt-BR',
+            'languages': ['pt-BR', 'pt', 'en-US', 'en'],
+            'plugins': [
+                {'name': 'Chrome PDF Plugin', 'description': 'Portable Document Format', 'version': '2.0'},
+                {'name': 'Chrome PDF Viewer', 'description': '', 'version': ''}
+            ],
+            'canvas': self._generate_canvas(),
+            'webgl': self._generate_webgl()
+        }
+    
+    def _generate_canvas(self):
+        # Gera dados canvas realistas
+        canvas_data = []
+        for i in range(10):
+            canvas_data.append({
+                'data': ''.join(random.choices(string.ascii_letters + string.digits, k=100)),
+                'hash': hashlib.sha256(''.join(random.choices(string.ascii_letters + string.digits, k=100)).encode()).hexdigest()
+            })
+        return canvas_data
+    
+    def _generate_webgl(self):
+        # Gera dados WebGL realistas
+        return {
+            'vendor': 'Intel Inc.',
+            'renderer': 'Intel Iris OpenGL Engine',
+            'shadingLanguageVersion': 'WebGL GLSL ES 1.0 (OpenGL ES GLSL 1.0)',
+            'version': 'WebGL 1.0',
+            'extensions': [
+                'ANGLE_instanced_arrays',
+                'EXT_blend_minmax',
+                'EXT_color_buffer_half_float',
+                'EXT_disjoint_timer_query',
+                'EXT_frag_depth',
+                'EXT_shader_texture_lod',
+                'EXT_texture_filter_anisotropic',
+                'OES_element_index_uint',
+                'OES_standard_derivatives',
+                'OES_texture_float',
+                'OES_texture_float_linear',
+                'OES_texture_half_float',
+                'OES_texture_half_float_linear',
+                'OES_vertex_array_object',
+                'WEBGL_color_buffer_float',
+                'WEBGL_compressed_texture_s3tc',
+                'WEBGL_compressed_texture_s3tc_srgb',
+                'WEBGL_debug_renderer_info',
+                'WEBGL_debug_shaders',
+                'WEBGL_depth_texture',
+                'WEBGL_draw_buffers',
+                'WEBGL_lose_context',
+                'WEBGL_multi_draw'
+            ]
+        }
+    
+    def bypass_all_protections(self, url):
+        try:
+            # Configura proxy rotulado aleatório
+            proxies = {
+                'http': f'http://{random.choice(["proxy1.com", "proxy2.com", "proxy3.com"])}:8080',
+                'https': f'https://{random.choice(["proxy1.com", "proxy2.com", "proxy3.com"])}:8080'
+            }
+            
+            # Cria sessão com headers aleatórios
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.5',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+                'Cache-Control': 'max-age=0'
+            }
+            
+            # Adiciona fingerprint ao header
+            fingerprint = self.generate_fingerprint()
+            headers['X-Fingerprint'] = json.dumps(fingerprint)
+            
+            # Adiciona delay aleatório entre requisições
+            time.sleep(random.uniform(1, 3))
+            
+            # Faz requisição com proxy e headers
+            response = self.session.get(
+                url,
+                headers=headers,
+                proxies=proxies,
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                print(f"Sucesso: {response.text[:200]}...")
+            else:
+                print(f"Erro: {response.status_code}")
+                
+        except Exception as e:
+            print(f"Erro: {str(e)}")
+    
+    def _get_chrome_options(self):
+        options = Options()
+        options.add_argument('--disable-blink-features=AutomationControlled')
+        options.add_experimental_option('excludeSwitches', ['enable-automation'])
+        options.add_experimental_option('useAutomationExtension', False)
+        options.add_argument('--headless=new')  # Headless moderno
+        return options
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py.cover
-.hypothesis/
-.pytest_cache/
-cover/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-.pybuilder/
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-#   For a library or package, you might want to ignore these files since the code is
-#   intended to run in multiple environments; otherwise, check them in:
-# .python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# UV
-#   Similar to Pipfile.lock, it is generally recommended to include uv.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#uv.lock
-
-# poetry
-#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-#poetry.lock
-#poetry.toml
-
-# pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#   pdm recommends including project-wide configuration in pdm.toml, but excluding .pdm-python.
-#   https://pdm-project.org/en/latest/usage/project/#working-with-version-control
-#pdm.lock
-#pdm.toml
-.pdm-python
-.pdm-build/
-
-# pixi
-#   Similar to Pipfile.lock, it is generally recommended to include pixi.lock in version control.
-#pixi.lock
-#   Pixi creates a virtual environment in the .pixi directory, just like venv module creates one
-#   in the .venv directory. It is recommended not to include this directory in version control.
-.pixi
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.envrc
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
-
-# Abstra
-# Abstra is an AI-powered process automation framework.
-# Ignore directories containing user credentials, local state, and settings.
-# Learn more at https://abstra.io/docs
-.abstra/
-
-# Visual Studio Code
-#  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
-#  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#  and can be added to the global gitignore or merged into this file. However, if you prefer, 
-#  you could uncomment the following to ignore the entire vscode folder
-# .vscode/
-
-# Ruff stuff:
-.ruff_cache/
-
-# PyPI configuration file
-.pypirc
-
-# Cursor
-#  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
-#  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
-#  refer to https://docs.cursor.com/context/ignore-files
-.cursorignore
-.cursorindexingignore
-
-# Marimo
-marimo/_static/
-marimo/_lsp/
-__marimo__/
+# Exemplo de uso
+advanced_bypass = AdvancedBrowserBypass()
+advanced_bypass.bypass_all_protections("https://example.com")
